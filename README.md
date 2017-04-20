@@ -1,4 +1,11 @@
 # Gulp Boilerplate for HTML/CSS/JS development
+Simple Boilerplate for HTML/CSS/JS development based on Gulp.
+
+## Installation
+```bash
+npm install
+gulp
+```
 
 ## Features
 1. Sass
@@ -25,6 +32,3 @@
             * vendors
         * views
 
-## How to use
-> 1. npm install
-> 2. gulp
