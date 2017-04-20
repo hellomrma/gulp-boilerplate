@@ -1,6 +1,6 @@
 # project-settings-based-on-gulp
 
-# 사용 가이드
+## 사용 가이드
 
-## npm install
-## gulp
+1. npm install
+2. gulp
