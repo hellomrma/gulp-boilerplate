@@ -2,19 +2,19 @@
 
 ## 폴더 구조
 * src
- * css
-  * less
-   * common
-   * mixins
-   * pages
-  * scss
-   * common
-   * mixins
-   * pages
- * img
-  * sprites
- * js
- * views
+    * css
+    * less
+        * common
+        * mixins
+        * pages
+    * scss
+        * common
+        * mixins
+        * pages
+    * img
+        * sprites
+    * js
+    * views
 * dist
 * lib
 
