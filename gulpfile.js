@@ -17,8 +17,8 @@ const concatCss = require('gulp-concat-css')
 const browserSync = require('browser-sync').create();
 
 const bases = {
-    src: 'src/',
-    dest: 'dist/'
+    src: 'public/src/',
+    dest: 'public/dist/'
 };
 
 const paths = {
@@ -38,9 +38,17 @@ gulp.task('html', function () {
         }));
 });
 
-gulp.task('minify-js', ['clean-js-folders'], function () {
-    return gulp.src(paths.js)
-        .pipe(concat('project-name.js'))
+gulp.task('js-vendors', ['clean-js-folders'], function () {
+    return gulp.src(bases.src + 'js/vendors/**/*.*')
+        .pipe(gulp.dest(bases.dest + 'js/vendors'))
+        .pipe(browserSync.reload({
+            stream: true
+        }));
+});
+
+gulp.task('minify-js', ['js-vendors'], function () {
+    return gulp.src([paths.js, '!public/src/js/vendors/**/*.*'])
+        .pipe(concat('project-name.min.js'))
         .pipe(uglify())
         .pipe(gulp.dest(bases.dest + 'js'))
         .pipe(browserSync.reload({
@@ -65,23 +73,8 @@ gulp.task('sass', function () {
         }));
 });
 
-gulp.task('less', function () {
-    return gulp.src(paths.less)
-        .pipe(sourcemaps.init())
-        .pipe(less())
-        .pipe(sourcemaps.write())
-        .pipe(autoprefixer({
-            browsers: ['last 2 version', 'safari 5', 'ie 7', 'ie 8', 'ie 9', 'ios 6', 'android 4'],
-            cascade: false
-        }))
-        .pipe(gulp.dest(bases.dest + 'css'))
-        .pipe(browserSync.reload({
-            stream: true
-        }));
-});
-
 gulp.task('minify-css', function () {
-    gulp.src([bases.dest + 'css/**/*.css', '!dist/css/**/*.min.css'])
+    gulp.src([bases.dest + 'css/**/*.css', '!public/dist/css/**/*.min.css'])
         .pipe(cssmin())
         .pipe(rename({
             suffix: '.min'
@@ -112,12 +105,12 @@ gulp.task('sprites', function () {
             return options;
         }
     };
-    var spriteData = gulp.src('./src/img/sprites/**/*.png').pipe(spritesmith(opts)).on('error', function (err) {
+    var spriteData = gulp.src('./public/src/img/sprites/**/*.png').pipe(spritesmith(opts)).on('error', function (err) {
         console.log(err)
     });
 
-    var imgStream = spriteData.img.pipe(gulp.dest('./dist/img/sprites'));
-    var cssStream = spriteData.css.pipe(gulp.dest('./dist/css/sprites'));
+    var imgStream = spriteData.img.pipe(gulp.dest('./public/dist/img/sprites'));
+    var cssStream = spriteData.css.pipe(gulp.dest('./public/dist/css/sprites'));
 
     return merge(imgStream, cssStream);
 });
@@ -126,6 +119,10 @@ gulp.task('sprites-css-concat', function () {
     return gulp.src(bases.dest + 'css/sprites/**/*.css')
         .pipe(concatCss("sprites.css"))
         .pipe(gulp.dest(bases.dest + 'css/sprites'));
+});
+
+gulp.task('clean-dist-folders', function () {
+    return del(bases.dest+'*.*');
 });
 
 gulp.task('clean-img-folders', function () {
@@ -160,6 +157,13 @@ gulp.task('watch', function () {
     });
 });
 
+gulp.task('first-time', function () {
+    gulp.start('clean-dist-folders');
+    gulp.start('minify-js');
+    gulp.start('generate-images-sprites');
+    gulp.start('html');
+})
+
 gulp.task('server', ['watch'], function () {
     browserSync.init({
         server: {
@@ -168,4 +172,4 @@ gulp.task('server', ['watch'], function () {
     });
 });
 
-gulp.task('default', ['server', 'watch']);
+gulp.task('default', ['first-time', 'server', 'watch']);
