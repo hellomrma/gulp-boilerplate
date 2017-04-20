@@ -26,6 +26,6 @@
     * dist (desination folders. it auto building when you'are first run gulp)
     
 ## How to use
-after install nodejs https://nodejs.org/ko/
+after install [nodejs](https://nodejs.org/ko/){:target="_blank"}
 > 1. npm install
 > 2. gulp
