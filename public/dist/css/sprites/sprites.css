@@ -17,22 +17,22 @@ To change `display` (e.g. `display: inline-block;`), we suggest using a common C
 <i class="icon icon-home"></i>
 */
 
-.icon-etc-sp-etc-01 {
-  background-image: url("../img/sprites/etc.png");
+.icon-folder-01-sp-01-01 {
+  background-image: url("../img/sprites/folder-01.png");
   background-position: 0px 0px;
   width: 64px;
   height: 64px;
 }
 
-.icon-etc-sp-etc-02 {
-  background-image: url("../img/sprites/etc.png");
+.icon-folder-01-sp-01-02 {
+  background-image: url("../img/sprites/folder-01.png");
   background-position: -68px 0px;
   width: 64px;
   height: 64px;
 }
 
-.icon-etc-sp-etc-03 {
-  background-image: url("../img/sprites/etc.png");
+.icon-folder-01-sp-01-03 {
+  background-image: url("../img/sprites/folder-01.png");
   background-position: 0px -68px;
   width: 64px;
   height: 64px;
@@ -40,18 +40,18 @@ To change `display` (e.g. `display: inline-block;`), we suggest using a common C
 
 @media (-webkit-min-device-pixel-ratio: 2),
        (min-resolution: 192dpi) {
-  .icon-etc-sp-etc-01 {
-    background-image: url("etc@2x.png");
+  .icon-folder-01-sp-01-01 {
+    background-image: url("folder-01@2x.png");
     background-size: 132px 132px;
   }
 
-  .icon-etc-sp-etc-02 {
-    background-image: url("etc@2x.png");
+  .icon-folder-01-sp-01-02 {
+    background-image: url("folder-01@2x.png");
     background-size: 132px 132px;
   }
 
-  .icon-etc-sp-etc-03 {
-    background-image: url("etc@2x.png");
+  .icon-folder-01-sp-01-03 {
+    background-image: url("folder-01@2x.png");
     background-size: 132px 132px;
   }
 }
@@ -74,22 +74,22 @@ To change `display` (e.g. `display: inline-block;`), we suggest using a common C
 <i class="icon icon-home"></i>
 */
 
-.icon-icons-sp-icons-01 {
-  background-image: url("../img/sprites/icons.png");
+.icon-folder-02-sp-02-01 {
+  background-image: url("../img/sprites/folder-02.png");
   background-position: 0px 0px;
   width: 13px;
   height: 13px;
 }
 
-.icon-icons-sp-icons-02 {
-  background-image: url("../img/sprites/icons.png");
+.icon-folder-02-sp-02-02 {
+  background-image: url("../img/sprites/folder-02.png");
   background-position: -17px 0px;
   width: 11px;
   height: 11px;
 }
 
-.icon-icons-sp-icons-03 {
-  background-image: url("../img/sprites/icons.png");
+.icon-folder-02-sp-02-03 {
+  background-image: url("../img/sprites/folder-02.png");
   background-position: 0px -17px;
   width: 9px;
   height: 9px;
@@ -113,15 +113,15 @@ To change `display` (e.g. `display: inline-block;`), we suggest using a common C
 <i class="icon icon-home"></i>
 */
 
-.icon-txt-sp-txt-01 {
-  background-image: url("../img/sprites/txt.png");
+.icon-folder-03-sp-03-01 {
+  background-image: url("../img/sprites/folder-03.png");
   background-position: 0px 0px;
   width: 16px;
   height: 16px;
 }
 
-.icon-txt-sp-txt-02 {
-  background-image: url("../img/sprites/txt.png");
+.icon-folder-03-sp-03-02 {
+  background-image: url("../img/sprites/folder-03.png");
   background-position: -20px 0px;
   width: 5px;
   height: 9px;

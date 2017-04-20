@@ -8,7 +8,7 @@ gulp
 ```
 
 ## Features
-1. Sass
+1. Sass (compiles to CSS)
 2. CSS Minify
 3. JS Minify (not include vendors folder)
 4. Image Sprite Generate
@@ -25,10 +25,9 @@ gulp
                 * pages
         * img
             * sprites
-                * etc (sample)
-                * icons (sample)
-                * txt (sample)
+                * folder-01
+                * folder-02
+                * folder-03
         * js
             * vendors
         * views
-
