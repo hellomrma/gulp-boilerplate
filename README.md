@@ -3,12 +3,13 @@
 ## Features
 1. Sass
 2. CSS Minify
-3. JS Minify (not include vendors)
+3. JS Minify (not include vendors folder)
 4. Image Sprite Generate
 5. HTML, CSS, JS LiveReload
 
 ## Structure
 * public
+    * dist (desination folders. it auto building when you'are first run gulp)
     * src (developer working folders)
         * css
             * scss
@@ -23,9 +24,8 @@
         * js
             * vendors
         * views
-    * dist (desination folders. it auto building when you'are first run gulp)
-    
+
 ## How to use
-after install nodejs https://nodejs.org/ko/
+after install nodejs <a href="https://nodejs.org" target="_blank">https://nodejs.org</a>
 > 1. npm install
 > 2. gulp
