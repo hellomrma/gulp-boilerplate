@@ -1,4 +1,4 @@
-# oh-my-god-i-have-a-new-project-right-now (가칭)
+# markup-project-settings-on-gulp (가칭)
 
 ## 폴더 구조
 * public
