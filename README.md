@@ -26,6 +26,5 @@
         * views
 
 ## How to use
-after install nodejs <a href="https://nodejs.org" target="_blank">https://nodejs.org</a>
-> 1. npm install
-> 2. gulp
+> 2. npm install
+> 3. gulp
