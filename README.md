@@ -19,5 +19,5 @@
     * dist (목적지 폴더 - 초기 실행시 자동 생성)
 
 ## 사용 가이드
-1. npm install
-2. gulp
+> 1. npm install
+> 2. gulp
