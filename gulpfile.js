@@ -164,7 +164,7 @@ gulp.task('first-time', function () {
     gulp.start('html');
 })
 
-gulp.task('server', ['watch'], function () {
+gulp.task('server', function () {
     browserSync.init({
         server: {
             baseDir: bases.dest
