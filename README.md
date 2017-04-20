@@ -1,7 +1,5 @@
-# markup-project-settings-on-gulp
-=============
+# Gulp Boilerplate for HTML/CSS/JS development
 ## Structure
-=============
 * public
     * src (developer working folders)
         * css
@@ -19,7 +17,6 @@
         * views
     * dist (desination folders. it auto building when you'are first run gulp)
 ## How to use
-=============
 after install nodejs https://nodejs.org/ko/
 > 1. npm install
 > 2. gulp
