@@ -1,5 +1,5 @@
 {
-  "name": "front-end-development-settings",
+  "name": "front-end-development-project-init-settings",
   "version": "1.0.0",
   "main": "",
   "scripts": {
@@ -27,5 +27,5 @@
     "merge-stream": "^1.0.1",
     "run-sequence": "^1.2.2"
   },
-  "description": "Settings for Front End Development based on gulp"
+  "description": "Settings for Front End Development Project based on gulp"
 }
