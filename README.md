@@ -1,8 +1,9 @@
-# markup-project-settings-on-gulp (가칭)
-
-## 폴더 구조
+# markup-project-settings-on-gulp
+=============
+## Structure
+=============
 * public
-    * src (소스 폴더)
+    * src (developer working folders)
         * css
             * scss
                 * common
@@ -16,8 +17,9 @@
         * js
             * vendors
         * views
-    * dist (목적지 폴더 - 초기 실행시 자동 생성)
-
-## 사용 가이드
+    * dist (desination folders. it auto building when you'are first run gulp)
+## How to use
+=============
+after install nodejs https://nodejs.org/ko/
 > 1. npm install
 > 2. gulp
