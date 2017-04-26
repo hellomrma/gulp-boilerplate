@@ -12,7 +12,8 @@ gulp
 2. CSS Minify
 3. JS Minify (not include vendors folder)
 4. Image Sprite Generate
-5. HTML, CSS, JS LiveReload
+5. Image Optimization
+6. HTML, CSS, JS LiveReload
 
 ## Structure
 * public
