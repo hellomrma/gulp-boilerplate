@@ -172,4 +172,4 @@ gulp.task('server', function () {
     });
 });
 
-gulp.task('default', ['init-dist-resources', 'server', 'watch']);
+gulp.task('default', ['init-dist-resources', 'watch', 'server']);
