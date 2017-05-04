@@ -1,27 +1,27 @@
-const gulp = require('gulp');
-const sass = require('gulp-sass');
-const less = require('gulp-less');
-const sourcemaps = require('gulp-sourcemaps');
-const concat = require('gulp-concat');
-const uglify = require('gulp-uglify');
-const cssmin = require('gulp-cssmin');
-const rename = require('gulp-rename');
-const autoprefixer = require('gulp-autoprefixer');
-const spritesmith = require('gulp.spritesmith-multi')
-const merge = require('merge-stream')
-const imagemin = require('gulp-imagemin')
-const runSequence = require('run-sequence')
-const del = require('del')
-const watch = require('gulp-watch')
-const concatCss = require('gulp-concat-css')
-const browserSync = require('browser-sync').create();
+var gulp = require('gulp');
+var sass = require('gulp-sass');
+var less = require('gulp-less');
+var sourcemaps = require('gulp-sourcemaps');
+var concat = require('gulp-concat');
+var uglify = require('gulp-uglify');
+var cssmin = require('gulp-cssmin');
+var rename = require('gulp-rename');
+var autoprefixer = require('gulp-autoprefixer');
+var spritesmith = require('gulp.spritesmith-multi');
+var merge = require('merge-stream');
+var imagemin = require('gulp-imagemin');
+var runSequence = require('run-sequence');
+var del = require('del');
+var watch = require('gulp-watch');
+var concatCss = require('gulp-concat-css');
+var browserSync = require('browser-sync').create();
 
-const bases = {
+var bases = {
     src: 'public/src/',
     dest: 'public/dist/'
 };
 
-const paths = {
+var paths = {
     js: bases.src + 'js/**/*.js',
     scss: bases.src + 'css/scss/**/*.scss',
     less: bases.src + 'css/less/**/*.less',
@@ -162,7 +162,7 @@ gulp.task('init-dist-resources', function () {
     gulp.start('minify-js');
     gulp.start('generate-images-sprites');
     gulp.start('html');
-})
+});
 
 gulp.task('server', ['watch'], function () {
     browserSync.init({
