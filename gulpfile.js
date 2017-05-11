@@ -13,6 +13,7 @@ var imagemin = require('gulp-imagemin');
 var runSequence = require('run-sequence');
 var del = require('del');
 var watch = require('gulp-watch');
+var wait = require('gulp-wait');
 var concatCss = require('gulp-concat-css');
 var browserSync = require('browser-sync').create();
 
@@ -58,6 +59,7 @@ gulp.task('minify-js', ['js-vendors'], function () {
 
 gulp.task('sass', function () {
     return gulp.src(paths.scss)
+        .pipe(wait(500))
         .pipe(sourcemaps.init())
         .pipe(sass({
             outputStyle: 'expanded'
