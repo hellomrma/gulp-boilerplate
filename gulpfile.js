@@ -90,20 +90,30 @@ gulp.task('sass', function () {
             browsers: ['last 2 version', 'safari 5', 'ie 7', 'ie 8', 'ie 9', 'ios 6', 'android 4'],
             cascade: false
         }))
-        .pipe(gulp.dest(bases.dest + 'css'))
+        .pipe(gulp.dest(bases.dest + 'css/scss'))
         .pipe(browserSync.reload({
             stream: true
         }));
 });
 
 gulp.task('minify-css', function () {
-    gulp.src([bases.dest + 'css/**/*.css', '!dist/css/**/*.min.css'])
+    gulp.src([bases.dest + 'css/scss/*.css', bases.dest + 'css/sprites/sprites.css', '!dist/css/*.min.css'])
         .pipe(plumber(plumberOption))
         .pipe(cssmin())
         .pipe(rename({
             suffix: '.min'
         }))
-        .pipe(gulp.dest(bases.dest + 'css'));
+        .pipe(gulp.dest(bases.dest + 'css'))
+});
+
+gulp.task('minify-libs-css', ['libs-css-concat'], function () {
+    gulp.src([bases.dest + 'css/libs/*.css', '!dist/css/libs/*.min.css'])
+        .pipe(plumber(plumberOption))
+        .pipe(cssmin())
+        .pipe(rename({
+            suffix: '.min'
+        }))
+        .pipe(gulp.dest(bases.dest + 'css'))
 });
 
 gulp.task('images', function () {
@@ -146,6 +156,13 @@ gulp.task('sprites-css-concat', function () {
         .pipe(gulp.dest(bases.dest + 'css/sprites'));
 });
 
+gulp.task('libs-css-concat', function () {
+    return gulp.src([bases.dest + 'css/libs/**/*.css', '!dist/css/libs/**/*.min.css'])
+        .pipe(plumber(plumberOption))
+        .pipe(concatCss("libs.css"))
+        .pipe(gulp.dest(bases.dest + 'css/libs'));
+});
+
 gulp.task('clean-dist-folders', function () {
     return del(bases.dest + '*.*');
 });
@@ -163,11 +180,11 @@ gulp.task('clean-js-folders', function () {
 });
 
 gulp.task('generate-sass', function () {
-    runSequence('clean-css-folders', 'css-libs', 'sprites', 'sass', 'sprites-css-concat', 'minify-css');
+    runSequence('clean-css-folders', 'css-libs', 'sprites', 'sass', 'sprites-css-concat', 'minify-css', 'minify-libs-css');
 });
 
 gulp.task('generate-images-sprites', function () {
-    runSequence('clean-css-folders', 'clean-img-folders', 'images', 'css-libs', 'sprites', 'sass', 'sprites-css-concat', 'minify-css');
+    runSequence('clean-css-folders', 'clean-img-folders', 'images', 'css-libs', 'sprites', 'sass', 'sprites-css-concat', 'minify-css', 'minify-libs-css');
 });
 
 gulp.task('watch', function () {
