@@ -25,7 +25,7 @@ var bases = {
 
 var paths = {
     js: bases.src + 'js/**/*.js',
-    css: bases.src + 'css/libs/**/*.css',
+    cssLibs: bases.src + 'css/libs/**/*.css',
     scss: bases.src + 'css/scss/**/*.scss',
     less: bases.src + 'css/less/**/*.less',
     html: bases.src + '**/*.html',
@@ -173,10 +173,10 @@ gulp.task('generate-images-sprites', function () {
 gulp.task('watch', function () {
     gulp.watch(paths.html, ['html']);
     gulp.watch(paths.js, ['minify-js']);
-    watch([paths.css], function () {
+    watch([paths.scss], function () {
         gulp.start('generate-sass');
     });
-    gulp.watch(paths.scss, ['sass']);
+    gulp.watch(paths.cssLibs, ['generate-sass']);
     watch([paths.images], function () {
         gulp.start('generate-images-sprites');
     });
