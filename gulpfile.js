@@ -16,20 +16,31 @@ var watch = require('gulp-watch');
 var wait = require('gulp-wait');
 var concatCss = require('gulp-concat-css');
 var browserSync = require('browser-sync').create();
+var plumber = require('gulp-plumber');
 
 var bases = {
-    src: 'public/src/',
-    dest: 'public/dist/'
+    src: 'src/',
+    dest: 'dist/'
 };
 
 var paths = {
     js: bases.src + 'js/**/*.js',
+    css: bases.src + 'css/libs/**/*.css',
     scss: bases.src + 'css/scss/**/*.scss',
     less: bases.src + 'css/less/**/*.less',
     html: bases.src + '**/*.html',
     images: bases.src + 'img/**/*.*',
     sprites: bases.src + 'img/sprites/**/*.*'
 };
+
+var errorHandler = function (error) {
+    console.error(error.message);
+    this.emit('end');
+};
+
+var plumberOption = {
+    errorHandler: errorHandler
+}
 
 gulp.task('html', function () {
     return gulp.src(paths.html)
@@ -39,16 +50,25 @@ gulp.task('html', function () {
         }));
 });
 
-gulp.task('js-vendors', ['clean-js-folders'], function () {
-    return gulp.src(bases.src + 'js/vendors/**/*.*')
-        .pipe(gulp.dest(bases.dest + 'js/vendors'))
+gulp.task('js-libs', ['clean-js-folders'], function () {
+    return gulp.src(bases.src + 'js/libs/**/*.*')
+        .pipe(gulp.dest(bases.dest + 'js/libs'))
         .pipe(browserSync.reload({
             stream: true
         }));
 });
 
-gulp.task('minify-js', ['js-vendors'], function () {
-    return gulp.src([paths.js, '!public/src/js/vendors/**/*.*'])
+gulp.task('css-libs', function () {
+    return gulp.src(bases.src + 'css/libs/**/*.*')
+        .pipe(gulp.dest(bases.dest + 'css/libs'))
+        .pipe(browserSync.reload({
+            stream: true
+        }));
+});
+
+gulp.task('minify-js', ['js-libs'], function () {
+    return gulp.src([paths.js, '!src/js/libs/**/*.*'])
+        .pipe(plumber(plumberOption))
         .pipe(concat('project-name.min.js'))
         .pipe(uglify())
         .pipe(gulp.dest(bases.dest + 'js'))
@@ -59,7 +79,8 @@ gulp.task('minify-js', ['js-vendors'], function () {
 
 gulp.task('sass', function () {
     return gulp.src(paths.scss)
-        .pipe(wait(500))
+        // .pipe(wait(500))
+        .pipe(plumber(plumberOption))
         .pipe(sourcemaps.init())
         .pipe(sass({
             outputStyle: 'expanded'
@@ -76,7 +97,8 @@ gulp.task('sass', function () {
 });
 
 gulp.task('minify-css', function () {
-    gulp.src([bases.dest + 'css/**/*.css', '!public/dist/css/**/*.min.css'])
+    gulp.src([bases.dest + 'css/**/*.css', '!dist/css/**/*.min.css'])
+        .pipe(plumber(plumberOption))
         .pipe(cssmin())
         .pipe(rename({
             suffix: '.min'
@@ -107,18 +129,19 @@ gulp.task('sprites', function () {
             return options;
         }
     };
-    var spriteData = gulp.src('./public/src/img/sprites/**/*.png').pipe(spritesmith(opts)).on('error', function (err) {
+    var spriteData = gulp.src('./src/img/sprites/**/*.png').pipe(spritesmith(opts)).on('error', function (err) {
         console.log(err)
     });
 
-    var imgStream = spriteData.img.pipe(gulp.dest('./public/dist/img/sprites'));
-    var cssStream = spriteData.css.pipe(gulp.dest('./public/dist/css/sprites'));
+    var imgStream = spriteData.img.pipe(gulp.dest('./dist/img/sprites'));
+    var cssStream = spriteData.css.pipe(gulp.dest('./dist/css/sprites'));
 
     return merge(imgStream, cssStream);
 });
 
 gulp.task('sprites-css-concat', function () {
     return gulp.src(bases.dest + 'css/sprites/**/*.css')
+        .pipe(plumber(plumberOption))
         .pipe(concatCss("sprites.css"))
         .pipe(gulp.dest(bases.dest + 'css/sprites'));
 });
@@ -140,17 +163,17 @@ gulp.task('clean-js-folders', function () {
 });
 
 gulp.task('generate-sass', function () {
-    runSequence('clean-css-folders', 'sprites', 'sass', 'sprites-css-concat', 'minify-css');
+    runSequence('clean-css-folders', 'css-libs', 'sprites', 'sass', 'sprites-css-concat', 'minify-css');
 });
 
 gulp.task('generate-images-sprites', function () {
-    runSequence('clean-css-folders', 'clean-img-folders', 'images', 'sprites', 'sass', 'sprites-css-concat', 'minify-css');
+    runSequence('clean-css-folders', 'clean-img-folders', 'images', 'css-libs', 'sprites', 'sass', 'sprites-css-concat', 'minify-css');
 });
 
 gulp.task('watch', function () {
     gulp.watch(paths.html, ['html']);
     gulp.watch(paths.js, ['minify-js']);
-    watch([paths.scss], function () {
+    watch([paths.css], function () {
         gulp.start('generate-sass');
     });
     gulp.watch(paths.scss, ['sass']);
