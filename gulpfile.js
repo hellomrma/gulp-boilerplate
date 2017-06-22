@@ -91,9 +91,6 @@ gulp.task('sass', function () {
             cascade: false
         }))
         .pipe(gulp.dest(bases.dest + 'css/scss'))
-        .pipe(browserSync.reload({
-            stream: true
-        }));
 });
 
 gulp.task('minify-css', function () {
@@ -104,6 +101,9 @@ gulp.task('minify-css', function () {
             suffix: '.min'
         }))
         .pipe(gulp.dest(bases.dest + 'css'))
+        .pipe(browserSync.reload({
+            stream: true
+        }));
 });
 
 gulp.task('minify-libs-css', ['libs-css-concat'], function () {
@@ -180,23 +180,19 @@ gulp.task('clean-js-folders', function () {
 });
 
 gulp.task('generate-sass', function () {
-    runSequence('clean-css-folders', 'css-libs', 'sprites', 'sass', 'sprites-css-concat', 'minify-css', 'minify-libs-css');
+    runSequence('clean-css-folders', 'css-libs', 'sprites', 'sass', 'sprites-css-concat', 'minify-libs-css', 'minify-css');
 });
 
 gulp.task('generate-images-sprites', function () {
-    runSequence('clean-css-folders', 'clean-img-folders', 'images', 'css-libs', 'sprites', 'sass', 'sprites-css-concat', 'minify-css', 'minify-libs-css');
+    runSequence('clean-css-folders', 'clean-img-folders', 'images', 'css-libs', 'sprites', 'sass', 'sprites-css-concat', 'minify-libs-css', 'minify-css');
 });
 
 gulp.task('watch', function () {
     gulp.watch(paths.html, ['html']);
     gulp.watch(paths.js, ['minify-js']);
-    watch([paths.scss], function () {
-        gulp.start('generate-sass');
-    });
+    gulp.watch(paths.scss, ['generate-sass']);
     gulp.watch(paths.cssLibs, ['generate-sass']);
-    watch([paths.images], function () {
-        gulp.start('generate-images-sprites');
-    });
+    gulp.watch(paths.images, ['generate-images-sprites']);
 });
 
 gulp.task('init-dist-resources', function () {
