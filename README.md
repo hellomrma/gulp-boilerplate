@@ -11,10 +11,10 @@ gulp
 1. Sass (compiles to CSS)
 2. Less (compiles to CSS)
 3. CSS Minify
-4. JS Minify (not include vendors folder)
+4. JS Minify (not include library folder)
 5. Image Sprite Generate
 6. Image Optimization
-7. HTML, CSS, JS LiveReload
+7. HTML, CSS, JS Browsersync
 
 ## Structure
 * public
