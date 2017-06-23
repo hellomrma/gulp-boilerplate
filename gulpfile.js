@@ -157,10 +157,8 @@ gulp.task('minify-css', function () {
         .pipe(rename({
             suffix: '.min'
         }))
-        .pipe(gulp.dest(bases.dest + 'css'))
-        .pipe(browserSync.reload({
-            stream: true
-        }));
+        .pipe(gulp.dest(bases.dest + 'css'));
+        browserSync.reload();
 });
 
 gulp.task('clean-js-folders', function () {
@@ -190,7 +188,6 @@ var plumberOption = {
 gulp.task('generate-sass-less', function () {
     runSequence('clean-css-folders', 'css-libs', 'sprites', 'sass', 'less', 'sprites-css-concat', 'minify-libs-css', 'minify-css');
 });
-
 
 gulp.task('generate-images-sprites', function () {
     runSequence('clean-css-folders', 'clean-img-folders', 'images', 'css-libs', 'sprites', 'sass', 'less', 'sprites-css-concat', 'minify-libs-css', 'minify-css');
