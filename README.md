@@ -9,11 +9,12 @@ gulp
 
 ## Features
 1. Sass (compiles to CSS)
-2. CSS Minify
-3. JS Minify (not include vendors folder)
-4. Image Sprite Generate
-5. Image Optimization
-6. HTML, CSS, JS LiveReload
+2. Less (compiles to CSS)
+3. CSS Minify
+4. JS Minify (not include library folder)
+5. Image Sprite Generate
+6. Image Optimization
+7. HTML, CSS, JS Browsersync
 
 ## Structure
 * public
@@ -30,5 +31,5 @@ gulp
                 * folder-02
                 * folder-03
         * js
-            * vendors
+            * libs
         * views
