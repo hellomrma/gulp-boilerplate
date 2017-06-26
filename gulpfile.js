@@ -163,7 +163,7 @@ gulp.task('minify-css', function () {
             suffix: '.min'
         }))
         .pipe(gulp.dest(bases.dest + 'css'));
-        browserSync.reload();
+    browserSync.reload();
 });
 
 gulp.task('minify-js', ['js-libs'], function () {
@@ -187,7 +187,7 @@ var plumberOption = {
 };
 
 gulp.task('generate-sass-less', function () {
-    runSequence('clean-css-folders', 'css-libs', 'sprites', 'sass', 'less', 'sprites-css-concat', 'minify-libs-css', 'minify-css');
+    runSequence('clean-css-folders', 'css-libs', 'sass', 'less', 'minify-libs-css', 'minify-css');
 });
 
 gulp.task('generate-sprites', function () {
