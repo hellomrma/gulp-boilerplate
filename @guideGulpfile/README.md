@@ -6,6 +6,16 @@
     3. HTML / JS / IMAGE / SCSS / LESS 파일의 변경이 있을 시 각각의 task(작업)를 실행함.
 
 ## task1 - initialize-resouces
+    ```javascript
+    gulp.task('initialize-resources', function () {
+        gulp.start('clean-dist-folders');
+        gulp.start('generate-images-sprites');
+        gulp.start('minify-js');
+        gulp.start('html');
+        gulp.start('server');
+    });
+    ```
+
     1. 배포 폴더를 삭제 (기존 작업을 하면서 남아 있는 불필요한 파일 및 폴더를 깨끗이 정리함으로써 리소스가 덮어지면서 생기는 오류를 예방 하기 위함)
 
 
