@@ -88,6 +88,43 @@ gulp.task('server', ['watch'], function () {
 1. browserSync 를 활용해 서버를 띄움.  
 2. 바라보는 폴더는 배포(dist) 폴더.  
 3. 기본 port 는 3030  
-Documentation (https://browsersync.io/docs/gulp)  
 
-## task4
+Gulp browserSync Documentation (https://browsersync.io/docs/gulp)  
+
+## task4 - html
+```javascript
+gulp.task('html', function () {
+    return gulp.src(paths.html)
+        .pipe(gulp.dest(bases.dest))
+        .pipe(browserSync.reload({
+            stream: true
+        }));
+});
+```
+html 파일의 변화가 일어났을때 배포(dist) 폴더로 배포 후 페이지를 reload 함.
+
+## task5 - minify-js
+```javascript
+gulp.task('clean-js-folders', function () {
+    return del(bases.dest + 'js');
+});
+
+gulp.task('js-libs', ['clean-js-folders'], function () {
+    return gulp.src(bases.src + 'js/libs/**/*.*')
+        .pipe(gulp.dest(bases.dest + 'js/libs'))
+        .pipe(browserSync.reload({
+            stream: true
+        }));
+});
+
+gulp.task('minify-js', ['js-libs'], function () {
+    return gulp.src([paths.js, '!src/js/libs/**/*.*'])
+        .pipe(plumber(plumberOption))
+        .pipe(concat('project-name.min.js'))
+        .pipe(uglify())
+        .pipe(gulp.dest(bases.dest + 'js'))
+        .pipe(browserSync.reload({
+            stream: true
+        }));
+});
+```
