@@ -17,19 +17,18 @@ gulp
 7. HTML, CSS, JS Browsersync
 
 ## Structure
-* public
-    * dist (desination folders. it auto building when you'are first run gulp)
-    * src (developer working folders)
-        * css
-            * scss
-                * common
-                * mixins
-                * pages
-        * img
-            * sprites
-                * folder-01
-                * folder-02
-                * folder-03
-        * js
-            * libs
-        * views
+ * dist (desination folders. it auto building when you'are first run gulp)
+ * src (developer working folders)
+     * css
+         * scss
+             * common
+             * mixins
+             * pages
+     * img
+         * sprites
+             * folder-01
+             * folder-02
+             * folder-03
+     * js
+         * libs
+     * views
