@@ -153,7 +153,7 @@ var plumberOption = {
 ## TASK6 - generate-sass-less
 ```javascript
 gulp.task('generate-sass-less', function () {
-    runSequence('clean-css-folders', 'css-libs-deploy', 'sass', 'less', 'minify-libs-css', 'minify-css');
+    runSequence('clean-css-folders', 'css-libs-deploy', 'sprites', 'sprites-css-concat', 'sass', 'less', 'minify-libs-css', 'minify-css');
 });
 ```
 **generate-sass-less** task 는 runSequence 를 활용해서 multi-tasking 을 구현 함.
@@ -161,9 +161,10 @@ gulp.task('generate-sass-less', function () {
 1. SASS / LESS 파일을 수정하면 컴파일 하기전에 **clean-css-folders** task 를 먼저 실행 함.
 (다양하게 테스트를 해 본 결과, 배포(dist) 폴더에 파일들이 남아 있으면 코드가 꼬이는 경우가 발생했었음. 이를 방지하기 위함.)
 2. **css-libs-deploy** task 는 library 관련 CSS 를 옮김.
-3. SASS / LESS 파일을 컴파일 한 후
-4. **minify-libs-css** task 를 통하여 libs 폴더의 CSS 를 모두 합침.
-5. 마지막으로 이 파일들을 **minify-css** task 를 통하여 minify 함.
+3. css 폴더를 삭제 했음으로 **sprites**, **sprites-css-concat** task 를 실행하여 스프라이트 CSS 를 생성함.
+4. SASS / LESS 파일을 컴파일 한 후
+5. **minify-libs-css** task 를 통하여 libs 폴더의 CSS 를 모두 병합.
+6. 마지막으로 이 파일들을 **minify-css** task 를 통하여 minify 함.
 
 ### 세부 TASK 설명
 #### clean-css-folders
@@ -207,7 +208,9 @@ gulp.task('less', function () {
     return gulp.src(bases.src + 'css/less/*.less')
         .pipe(plumber(plumberOption))
         .pipe(sourcemaps.init())
-        .pipe(less())
+        .pipe(less({
+            plugins: [autoprefix]
+        }))
         .pipe(sourcemaps.write())
         .pipe(gulp.dest(bases.dest + 'css/less'));
 });
@@ -216,6 +219,15 @@ gulp.task('less', function () {
 2. sourcemaps 실행  
 sourcemaps 는 브라우저 개발자도구(F12)에서 특정 element 를 클릭했을 때 해당 속성이 어떤 SCSS or LESS 파일의 몇번째 라인에 있는 건지 알수 있게 도와주는 역할을 함.  
 
-**주의** : 최종적으로 min 파일로 나오는 CSS 의 경우엔 sourcemaps 정보가 사라지기 때문에 프로젝트 진행중에는 압축되지 않은 파일을 불러오는게 좋음.
+**주의** : 최종적으로 min 파일로 나오는 CSS 의 경우엔 sourcemaps 정보가 사라지기 때문에 프로젝트 진행중에는 압축되지 않은 파일을 불러오는게 좋음.  
 
-3. 
+3. SASS / LESS 컴파일 실행. (vendor prefix 적용)  
+4. sourcemaps 입력 실행.  
+5. 배포(dist) 폴더로 복사  
+
+## TASK7 - generate-sprites
+```javascript
+gulp.task('generate-sprites', function () {
+    runSequence('clean-css-folders', 'clean-img-folders', 'images-deploy', 'css-libs-deploy', 'sprites', 'sprites-css-concat', 'sass', 'less', 'minify-libs-css', 'minify-css');
+});
+```

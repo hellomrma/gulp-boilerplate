@@ -7,6 +7,7 @@ var uglify = require('gulp-uglify');
 var cssmin = require('gulp-cssmin');
 var rename = require('gulp-rename');
 var autoprefixer = require('gulp-autoprefixer');
+var lessAutoprefix = require('less-plugin-autoprefix');
 var spritesmith = require('gulp.spritesmith-multi');
 var merge = require('merge-stream');
 var imagemin = require('gulp-imagemin');
@@ -110,11 +111,17 @@ gulp.task('sass', function () {
         .pipe(gulp.dest(bases.dest + 'css/scss'));
 });
 
+var lessOptions = new lessAutoprefix({
+    browsers: ['last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1', 'ios 6', 'android 4']
+});
+
 gulp.task('less', function () {
     return gulp.src(bases.src + 'css/less/*.less')
         .pipe(plumber(plumberOption))
         .pipe(sourcemaps.init())
-        .pipe(less())
+        .pipe(less({
+            plugins: [lessOptions]
+        }))
         .pipe(sourcemaps.write())
         .pipe(gulp.dest(bases.dest + 'css/less'));
 });
@@ -191,11 +198,11 @@ var plumberOption = {
 };
 
 gulp.task('generate-sass-less', function () {
-    runSequence('clean-css-folders', 'css-libs-deploy', 'sass', 'less', 'minify-libs-css', 'minify-css');
+    runSequence('clean-css-folders', 'css-libs-deploy', 'sprites', 'sass', 'less', 'sprites-css-concat', 'minify-libs-css', 'minify-css');
 });
 
 gulp.task('generate-sprites', function () {
-    runSequence('clean-css-folders', 'clean-img-folders', 'images-deploy', 'css-libs-deploy', 'sprites', 'sass', 'less', 'sprites-css-concat', 'minify-libs-css', 'minify-css');
+    runSequence('clean-css-folders', 'clean-img-folders', 'images-deploy', 'css-libs-deploy', 'sprites', 'sprites-css-concat', 'sass', 'less', 'minify-libs-css', 'minify-css');
 });
 
 gulp.task('watch', function () {
