@@ -215,4 +215,7 @@ gulp.task('less', function () {
 1. SASS / LESS 컴파일(SCSS to CSS / LESS to CSS)을 하기 전 plumber 를 사용해 오류로 인한 튕김을 방지함.
 2. sourcemaps 실행  
 sourcemaps 는 브라우저 개발자도구(F12)에서 특정 element 를 클릭했을 때 해당 속성이 어떤 SCSS or LESS 파일의 몇번째 라인에 있는 건지 알수 있게 도와주는 역할을 함.  
+
 **주의** : 최종적으로 min 파일로 나오는 CSS 의 경우엔 sourcemaps 정보가 사라지기 때문에 프로젝트 진행중에는 압축되지 않은 파일을 불러오는게 좋음.
+
+3. 
