@@ -135,7 +135,7 @@ gulp.task('minify-js', ['js-libs-deploy'], function () {
 2. **clean-js-folders** task 는 배포(dist) 폴더 내 js 폴더 삭제.
 3. **js-libs-deploy** task 는 library 폴더 / 파일을 그대로 복사함.
 4. **minify-js** task 에서 libs 폴더를 제외한 js 파일을 합치고(concat) 압축(uglify)후 배포(dist) 폴더로 전달.
-5. 브라우저 reload. (**stream: true** 는 변경된 파일만 브라우저에 전송되어 새로고침(Refresh) 없이도 반영이 되는 옵션.
+5. 브라우저 reload. (**stream: true** 는 변경된 파일만 브라우저에 전송되어 새로고침(Refresh) 없이도 반영이 되는 옵션.)
 
 plumber 의 역할은 task 를 진행하다가 발생되는 오류로 인해 튕기는 걸 막아주는 역할을 함.  
 튕기는 대신 에러(error) 로그를 발생 시켜줌.  
