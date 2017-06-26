@@ -5,7 +5,7 @@
 2. server 를 띄우고 초기 설정해둔 파일 형식 또는 경로를 주시(watch)함.
 3. HTML / JS / IMAGE / SCSS / LESS 파일의 변경이 있을 시 각각의 task(작업)를 실행함.
 
-## setting paths
+## SETTING PATHS
 ```javascript
 var bases = {
     src: 'src/',
@@ -27,7 +27,7 @@ SASS / LESS / JS / IMAGE 등의 원본 형태의 파일들이 모여 있는 폴�
 2. dist 폴더  
 배포 폴더이며 이미지 최적화, SASS / LESS 컴파일, Image Sprite 작업이 이루어진 후 옮겨지는 폴더.  최종적으로 웹에서 보여지는 폴더임.
 
-## task1 - initialize-resouces
+## TASK1 - initialize-resouces
 
 ```javascript
 gulp.task('initialize-resources', function () {
@@ -60,7 +60,7 @@ html 파일을 배포(dist) 폴더에 복사함.
 5. server  
 server 를 띄움.  
 
-## task2 - watch
+## TASK2 - watch
 ```javascript
 gulp.task('watch', function () {
     gulp.watch(paths.html, ['html']);
@@ -74,7 +74,7 @@ gulp.task('watch', function () {
 3. css (SASS / LESS / ETC CSS) 수정이 일어났을 때 **generate-sass-less** task 를 실행.
 4. image 수정이 일어났을 때 **generate-sprites** task 를 실행.
 
-## task3 - server
+## TASK3 - server
 ```javascript
 gulp.task('server', ['watch'], function () {
     browserSync.init({
@@ -91,7 +91,7 @@ gulp.task('server', ['watch'], function () {
 
 Gulp browserSync Documentation (https://browsersync.io/docs/gulp)  
 
-## task4 - html
+## TASK4 - html
 ```javascript
 gulp.task('html', function () {
     return gulp.src(paths.html)
@@ -103,7 +103,7 @@ gulp.task('html', function () {
 ```
 html 파일의 변화가 일어났을때 배포(dist) 폴더로 배포 후 페이지를 reload 함.
 
-## task5 - minify-js
+## TASK5 - minify-js
 ```javascript
 gulp.task('clean-js-folders', function () {
     return del(bases.dest + 'js');
@@ -128,7 +128,7 @@ gulp.task('minify-js', ['js-libs'], function () {
         }));
 });
 ```
-1. **minify-js** task 를 실행하기 앞서 **clean-js-folders** , **js-libs** task 를 실행함.
+1. **minify-js** task 를 실행하기 앞서 **clean-js-folders**, **js-libs** task 를 실행함.
 2. **clean-js-folders** task 는 배포(dist) 폴더 내 js 폴더 삭제.
 3. **js-libs** task 는 library 폴더 / 파일을 그대로 복사함.
 4. **minify-js** task 에서 libs 폴더를 제외한 js 파일을 합치고(concat) 압축(uglify)후 배포(dist) 폴더로 옮김.
@@ -146,12 +146,17 @@ var plumberOption = {
 };
 ```
 
-## task6 - generate-sass-less
+## TASK6 - generate-sass-less
 ```javascript
 gulp.task('generate-sass-less', function () {
-    runSequence('clean-css-folders', 'css-libs', 'sprites', 'sass', 'less', 'sprites-css-concat', 'minify-libs-css', 'minify-css');
+    runSequence('clean-css-folders', 'css-libs', 'sass', 'less', 'minify-libs-css', 'minify-css');
 });
 ```
 **generate-sass-less** task 는 runSequence 를 활용해서 multi-tasking 을 구현 함.
 
-1. SASS / LESS 파일을 
+1. SASS / LESS 파일을 수정하면 컴파일 하기전에 **clean-css-folders** task 를 먼저 실행 함.
+(다양하게 테스트를 해 본 결과, 배포(dist) 폴더에 파일들이 남아 있으면 코드가 꼬이는 경우가 발생했었음. 이를 방지하기 위함.)
+2. **css-libs** task 는 library 관련 CSS 를 옮김.
+3. SASS / LESS 파일을 컴파일 한 후
+4. **minify-libs-css** task 를 통하여 libs 폴더의 CSS 를 모두 합침.
+5. 마지막으로 이 파일들을 **minify-css** task 를 통하여 minify 함.
