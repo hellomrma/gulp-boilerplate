@@ -30,12 +30,18 @@ $ gulp
             * common
             * mixins
             * pages
+        * less
+            * common
+            * mixins
+            * pages
+        * libs
     * img
         * sprites
             * folder-01
             * folder-02
             * folder-03
     * js
+        * apps
         * libs
     * views
 
