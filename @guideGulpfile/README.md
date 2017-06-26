@@ -34,7 +34,7 @@ gulp.task('initialize-resources', function () {
     gulp.start('clean-dist-folders');
     gulp.start('generate-sprites');
     gulp.start('minify-js');
-    gulp.start('html');
+    gulp.start('html-deploy');
     gulp.start('server');
 });
 ```
@@ -47,7 +47,7 @@ gulp.task('initialize-resources', function () {
 
 ```javascript
 gulp.task('generate-sprites', function () {
-    runSequence('clean-css-folders', 'clean-img-folders', 'images', 'css-libs', 'sprites', 'sass', 'less', 'sprites-css-concat', 'minify-libs-css', 'minify-css');
+    runSequence('clean-css-folders', 'clean-img-folders', 'images-deploy', 'css-libs-deploy', 'sprites', 'sass', 'less', 'sprites-css-concat', 'minify-libs-css', 'minify-css');
 });
 ```
 위 task 는 이미지가 업데이트 됨으로써 실행되는 일련의 작업들을 한데 모아둠.  
@@ -63,13 +63,13 @@ server 를 띄움.
 ## TASK2 - watch
 ```javascript
 gulp.task('watch', function () {
-    gulp.watch(paths.html, ['html']);
+    gulp.watch(paths.html, ['html-deploy']);
     gulp.watch(paths.js, ['minify-js']);
     gulp.watch(paths.css, ['generate-sass-less']);
     gulp.watch(paths.images, ['generate-sprites']);
 });
 ```
-1. html 수정이 일어났을 때 **html** task 를 실행.
+1. html 수정이 일어났을 때 **html-deploy** task 를 실행.
 2. js 수정이 일어났을 때 **minify-js** task 를 실행.
 3. css (SASS / LESS / ETC CSS) 수정이 일어났을 때 **generate-sass-less** task 를 실행.
 4. image 수정이 일어났을 때 **generate-sprites** task 를 실행.
@@ -81,7 +81,11 @@ gulp.task('server', ['watch'], function () {
         server: {
             baseDir: bases.dest
         },
-        port: 3030
+        options: {
+            reloadDelay: 250
+        },
+        port: 3030,
+        notify: false
     });
 });
 ```
@@ -93,7 +97,7 @@ Gulp browserSync Documentation (https://browsersync.io/docs/gulp)
 
 ## TASK4 - html
 ```javascript
-gulp.task('html', function () {
+gulp.task('html-deploy', function () {
     return gulp.src(paths.html)
         .pipe(gulp.dest(bases.dest))
         .pipe(browserSync.reload({
@@ -117,7 +121,7 @@ gulp.task('js-libs', ['clean-js-folders'], function () {
         }));
 });
 
-gulp.task('minify-js', ['js-libs'], function () {
+gulp.task('minify-js', ['js-libs-deploy'], function () {
     return gulp.src([paths.js, '!src/js/libs/**/*.*'])
         .pipe(plumber(plumberOption))
         .pipe(concat('project-name.min.js'))
@@ -128,9 +132,9 @@ gulp.task('minify-js', ['js-libs'], function () {
         }));
 });
 ```
-1. **minify-js** task 를 실행하기 앞서 **clean-js-folders**, **js-libs** task 를 실행함.
+1. **minify-js** task 를 실행하기 앞서 **clean-js-folders**, **js-libs-deploy** task 를 실행함.
 2. **clean-js-folders** task 는 배포(dist) 폴더 내 js 폴더 삭제.
-3. **js-libs** task 는 library 폴더 / 파일을 그대로 복사함.
+3. **js-libs-deploy** task 는 library 폴더 / 파일을 그대로 복사함.
 4. **minify-js** task 에서 libs 폴더를 제외한 js 파일을 합치고(concat) 압축(uglify)후 배포(dist) 폴더로 옮김.
 5. 브라우저 reload. (**stream: true** 는 변경된 파일만 브라우저에 전송되어 새로고침(Refresh) 없이도 반영이 되는 옵션.
 
@@ -149,14 +153,66 @@ var plumberOption = {
 ## TASK6 - generate-sass-less
 ```javascript
 gulp.task('generate-sass-less', function () {
-    runSequence('clean-css-folders', 'css-libs', 'sass', 'less', 'minify-libs-css', 'minify-css');
+    runSequence('clean-css-folders', 'css-libs-deploy', 'sass', 'less', 'minify-libs-css', 'minify-css');
 });
 ```
 **generate-sass-less** task 는 runSequence 를 활용해서 multi-tasking 을 구현 함.
 
 1. SASS / LESS 파일을 수정하면 컴파일 하기전에 **clean-css-folders** task 를 먼저 실행 함.
 (다양하게 테스트를 해 본 결과, 배포(dist) 폴더에 파일들이 남아 있으면 코드가 꼬이는 경우가 발생했었음. 이를 방지하기 위함.)
-2. **css-libs** task 는 library 관련 CSS 를 옮김.
+2. **css-libs-deploy** task 는 library 관련 CSS 를 옮김.
 3. SASS / LESS 파일을 컴파일 한 후
 4. **minify-libs-css** task 를 통하여 libs 폴더의 CSS 를 모두 합침.
 5. 마지막으로 이 파일들을 **minify-css** task 를 통하여 minify 함.
+
+### 세부 TASK 설명
+#### clean-css-folders
+```javascript
+gulp.task('clean-css-folders', function () {
+    return del(bases.dest + 'css');
+});
+```
+배포(dist) 폴더 내 CSS 폴더를 삭제 함.
+
+#### css-libs-deploy
+```javascript
+gulp.task('css-libs-deploy', function () {
+    return gulp.src(bases.src + 'css/libs/**/*.*')
+        .pipe(gulp.dest(bases.dest + 'css/libs'))
+        .pipe(browserSync.reload({
+            stream: true
+        }));
+});
+```
+libs 폴더의 파일들을 배포(dist) 폴더내 css/libs 폴더로 복사 함.
+
+#### sass / less
+```javascript
+gulp.task('sass', function () {
+    return gulp.src(paths.scss)
+        .pipe(plumber(plumberOption))
+        .pipe(sourcemaps.init())
+        .pipe(sass({
+            outputStyle: 'expanded'
+        }).on('error', sass.logError))
+        .pipe(autoprefixer({
+            browsers: ['last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1', 'ios 6', 'android 4'],
+            cascade: false
+        }))
+        .pipe(sourcemaps.write())
+        .pipe(gulp.dest(bases.dest + 'css/scss'));
+});
+
+gulp.task('less', function () {
+    return gulp.src(bases.src + 'css/less/*.less')
+        .pipe(plumber(plumberOption))
+        .pipe(sourcemaps.init())
+        .pipe(less())
+        .pipe(sourcemaps.write())
+        .pipe(gulp.dest(bases.dest + 'css/less'));
+});
+```
+1. SASS / LESS 컴파일(SCSS to CSS / LESS to CSS)을 하기 전 plumber 를 사용해 오류로 인한 튕김을 방지함.
+2. sourcemaps 실행  
+sourcemaps 는 브라우저 개발자도구(F12)에서 특정 element 를 클릭했을 때 해당 속성이 어떤 SCSS or LESS 파일의 몇번째 라인에 있는 건지 알수 있게 도와주는 역할을 함.  
+**주의** : 최종적으로 min 파일로 나오는 CSS 의 경우엔 sourcemaps 정보가 사라지기 때문에 프로젝트 진행중에는 압축되지 않은 파일을 불러오는게 좋음.
