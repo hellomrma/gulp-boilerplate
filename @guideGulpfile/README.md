@@ -168,7 +168,7 @@ gulp.task('generate-sass-less-sprites', function () {
 8. 마지막으로 이 파일들을 **minify-css** task 를 통하여 minify 함.
 
 ### 세부 TASK 설명
-#### clean-css-folders / clean-img-folders
+### clean-css-folders / clean-img-folders
 ```javascript
 gulp.task('clean-css-folders', function () {
     return del(bases.dest + 'css');
@@ -180,7 +180,7 @@ gulp.task('clean-img-folders', function () {
 ```
 배포(dist) 폴더 내 CSS / IMG 폴더를 삭제 함.  
 
-#### css-libs-deploy / images-deploy
+### css-libs-deploy / images-deploy
 ```javascript
 gulp.task('css-libs-deploy', function () {
     return gulp.src(bases.src + 'css/libs/**/*.*')
@@ -209,7 +209,7 @@ gulp.task('images-deploy', function () {
 img 폴더의 파일들을 배포(dist) 폴더내 img 폴더로 복사 함.  
 복사하기 전에 imagemin 을 실행하는데 이는 이미지 최적화 작업 임. 
 
-#### sprites
+### sprites
  ```javascript
  gulp.task('sprites', function () {
     var opts = {
@@ -241,7 +241,7 @@ img 폴더의 파일들을 배포(dist) 폴더내 img 폴더로 복사 함.
 1. 스프라이트 이미지 및 CSS 클래스 생성에 관한 옵션값을 정의 함. (이미지경로, 클래스네임, 여백 등)  
 2. src/img/sprites 안에 있는 모든 폴더 및 이미지를 옵션 값에 맞게 생성을 하고 이를 배포(dist) 폴더에 전달.  
 
-#### sprites-css-concat
+### sprites-css-concat
 ```javascript
 gulp.task('sprites-css-concat', function () {
     return gulp.src(bases.dest + 'css/sprites/**/*.css')
@@ -252,7 +252,7 @@ gulp.task('sprites-css-concat', function () {
 ```
 **sprites** task 를 실행함으로써 생성된 각각의 css 를 sprites.css 로 병합.
 
-#### sass / less
+### sass / less
 ```javascript
 gulp.task('sass', function () {
     return gulp.src(paths.scss)
@@ -290,7 +290,7 @@ sourcemaps 는 브라우저 개발자도구(F12)에서 특정 element 를 클릭
 4. sourcemaps 입력 실행.  
 5. 배포(dist) 폴더로 복사  
 
-#### minify-libs-css
+### minify-libs-css
 ```javascript
 gulp.task('css-libs-concat', function () {
     return gulp.src([bases.dest + 'css/libs/**/*.css', '!dist/css/libs/**/*.min.css'])
@@ -315,7 +315,7 @@ gulp.task('minify-libs-css', ['css-libs-concat'], function () {
 ```
 위의 task 에서 병합(concat)한 CSS 를 min.css 로 압축(minify) 함.
 
-#### minify-css
+### minify-css
 ```javascript
 gulp.task('minify-css', function () {
     gulp.src([bases.dest + 'css/scss/*.css', bases.dest + 'css/less/*.css', bases.dest + 'css/sprites/sprites.css', '!dist/css/*.min.css'])
