@@ -134,7 +134,7 @@ gulp.task('minify-js', ['js-libs-deploy'], function () {
 1. **minify-js** task 를 실행하기 앞서 **clean-js-folders**, **js-libs-deploy** task 를 실행함.
 2. **clean-js-folders** task 는 배포(dist) 폴더 내 js 폴더 삭제.
 3. **js-libs-deploy** task 는 library 폴더 / 파일을 그대로 복사함.
-4. **minify-js** task 에서 libs 폴더를 제외한 js 파일을 합치고(concat) 압축(uglify)후 배포(dist) 폴더로 옮김.
+4. **minify-js** task 에서 libs 폴더를 제외한 js 파일을 합치고(concat) 압축(uglify)후 배포(dist) 폴더로 전달.
 5. 브라우저 reload. (**stream: true** 는 변경된 파일만 브라우저에 전송되어 새로고침(Refresh) 없이도 반영이 되는 옵션.
 
 plumber 의 역할은 task 를 진행하다가 발생되는 오류로 인해 튕기는 걸 막아주는 역할을 함.  
@@ -160,8 +160,8 @@ gulp.task('generate-sass-less-sprites', function () {
 1. SASS / LESS 파일을 수정하면 컴파일 하기전에 **clean-css-folders** task 를 먼저 실행 함.
 (다양하게 테스트를 해 본 결과, 배포(dist) 폴더에 파일들이 남아 있으면 코드가 꼬이는 경우가 발생했었음. 이를 방지하기 위함.)
 2. **clean-img-folders** task 실행. 배포(dist) 폴더 내 img 폴더 삭제.
-3. **css-libs-deploy** task 실행. library 관련 CSS 를 옮김.
-4. **images-deploy** task 실행. 이미지를 옮김.
+3. **css-libs-deploy** task 실행. library 관련 CSS 를 전달.
+4. **images-deploy** task 실행. 이미지를 전달.
 5. css 폴더를 삭제 했음으로 **sprites**, **sprites-css-concat** task 를 실행하여 스프라이트 IMAGES / CSS 를 생성함.
 6. SASS / LESS 파일을 컴파일.
 7. **minify-libs-css** task 를 통하여 libs 폴더의 CSS 를 모두 병합.
@@ -235,6 +235,11 @@ img 폴더의 파일들을 배포(dist) 폴더내 img 폴더로 복사 함.
     return merge(imgStream, cssStream);
 });
  ```
+스프라이트 이미지 자동화의 경우엔 직접 제작하는 것보다 속도 측면에서는 빠르지만 몇가지 아쉬운 점이 있음.  
+그러나 이미지 및 CSS 클래스명에 관한 패턴만 명확하게 인지하고 있고 이를 잘 활용한다면 좋을거라 판단 됨.  
+
+1. 스프라이트 이미지 및 CSS 클래스 생성에 관한 옵션값을 정의 함. (이미지경로, 클래스네임, 여백 등)  
+2. src/img/sprites 안에 있는 모든 폴더 및 이미지를 옵션 값에 맞게 생성을 하고 이를 배포(dist) 폴더에 전달.  
 
 #### sprites-css-concat
 ```javascript
@@ -245,6 +250,7 @@ gulp.task('sprites-css-concat', function () {
         .pipe(gulp.dest(bases.dest + 'css/sprites'));
 });
 ```
+**sprites** task 를 실행함으로써 생성된 각각의 css 를 sprites.css 로 병합.
 
 #### sass / less
 ```javascript
@@ -292,7 +298,11 @@ gulp.task('css-libs-concat', function () {
         .pipe(concatCss("libs.css"))
         .pipe(gulp.dest(bases.dest + 'css/libs'));
 });
+```
+css / libs 폴더의 파일들을 libs.css 로 병합(concat)하고 배포(dist) 폴더로 넘김.  
+이때 *.min.css 파일은 제외함. (.css 와 min.css 파일이 두개 있을 경우에 min 은 제외)  
 
+```javascript
 gulp.task('minify-libs-css', ['css-libs-concat'], function () {
     gulp.src([bases.dest + 'css/libs/*.css', '!dist/css/libs/*.min.css'])
         .pipe(plumber(plumberOption))
@@ -303,6 +313,7 @@ gulp.task('minify-libs-css', ['css-libs-concat'], function () {
         .pipe(gulp.dest(bases.dest + 'css'));
 });
 ```
+위의 task 에서 병합(concat)한 CSS 를 min.css 로 압축(minify) 함.
 
 #### minify-css
 ```javascript
@@ -317,3 +328,4 @@ gulp.task('minify-css', function () {
     browserSync.reload();
 });
 ```
+최종적으로 각각의 CSS 폴더내에 있는 CSS 파일을 min.css 로 압축(minify) 함.
