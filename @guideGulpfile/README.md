@@ -5,6 +5,28 @@
 2. server 를 띄우고 초기 설정해둔 파일 형식 또는 경로를 주시(watch)함.
 3. HTML / JS / IMAGE / SCSS / LESS 파일의 변경이 있을 시 각각의 task(작업)를 실행함.
 
+## setting paths
+```javascript
+var bases = {
+    src: 'src/',
+    dest: 'dist/'
+};
+var paths = {
+    js: bases.src + 'js/**/*.js',
+    css: bases.src + 'css/**/*.*',
+    cssLibs: bases.src + 'css/libs/**/*.css',
+    scss: bases.src + 'css/scss/**/*.scss',
+    less: bases.src + 'css/less/**/*.less',
+    html: bases.src + '**/*.html',
+    images: bases.src + 'img/**/*.*',
+    sprites: bases.src + 'img/sprites/**/*.*'
+};
+```
+1. src 폴더  
+SASS / LESS / JS / IMAGE 등의 원본 형태의 파일들이 모여 있는 폴더.   
+2. dist 폴더  
+배포 폴더이며 이미지 최적화, SASS / LESS 컴파일, Image Sprite 작업이 이루어진 후 옮겨지는 폴더.  최종적으로 웹에서 보여지는 폴더임.
+
 ## task1 - initialize-resouces
 
 ```javascript
@@ -48,8 +70,8 @@ gulp.task('watch', function () {
 });
 ```
 1. html 수정이 일어났을 때 **html** task 를 실행.
-2. js 수정이 일어났을 때 **js** task 를 실행.
-3. css (sass/less/library css) 수정이 일어났을 때 **generate-sass-less task** 를 실행.
+2. js 수정이 일어났을 때 **minify-js** task 를 실행.
+3. css (SASS / LESS / ETC CSS) 수정이 일어났을 때 **generate-sass-less** task 를 실행.
 4. image 수정이 일어났을 때 **generate-sprites** task 를 실행.
 
 ## task3 - server
@@ -67,3 +89,5 @@ gulp.task('server', ['watch'], function () {
 2. 바라보는 폴더는 배포(dist) 폴더.  
 3. 기본 port 는 3030  
 Documentation (https://browsersync.io/docs/gulp)  
+
+## task4
