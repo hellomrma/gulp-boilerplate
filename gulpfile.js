@@ -25,6 +25,7 @@ var bases = {
 };
 var paths = {
     js: bases.src + 'js/**/*.js',
+    css: bases.src + 'css/**/*.*',
     cssLibs: bases.src + 'css/libs/**/*.css',
     scss: bases.src + 'css/scss/**/*.scss',
     less: bases.src + 'css/less/**/*.less',
@@ -189,22 +190,20 @@ gulp.task('generate-sass-less', function () {
     runSequence('clean-css-folders', 'css-libs', 'sprites', 'sass', 'less', 'sprites-css-concat', 'minify-libs-css', 'minify-css');
 });
 
-gulp.task('generate-images-sprites', function () {
+gulp.task('generate-sprites', function () {
     runSequence('clean-css-folders', 'clean-img-folders', 'images', 'css-libs', 'sprites', 'sass', 'less', 'sprites-css-concat', 'minify-libs-css', 'minify-css');
 });
 
 gulp.task('watch', function () {
     gulp.watch(paths.html, ['html']);
     gulp.watch(paths.js, ['minify-js']);
-    gulp.watch(paths.scss, ['generate-sass-less']);
-    gulp.watch(paths.cssLibs, ['generate-sass-less']);
-    gulp.watch(paths.less, ['generate-sass-less']);
-    gulp.watch(paths.images, ['generate-images-sprites']);
+    gulp.watch(paths.css, ['generate-sass-less']);
+    gulp.watch(paths.images, ['generate-sprites']);
 });
 
 gulp.task('initialize-resources', function () {
     gulp.start('clean-dist-folders');
-    gulp.start('generate-images-sprites');
+    gulp.start('generate-sprites');
     gulp.start('minify-js');
     gulp.start('html');
     gulp.start('server');
