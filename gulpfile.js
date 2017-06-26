@@ -6,6 +6,7 @@ var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var cssmin = require('gulp-cssmin');
 var rename = require('gulp-rename');
+var cleanCSS = require('gulp-clean-css');
 var autoprefixer = require('gulp-autoprefixer');
 var spritesmith = require('gulp.spritesmith-multi');
 var merge = require('merge-stream');
@@ -34,23 +35,7 @@ var paths = {
     sprites: bases.src + 'img/sprites/**/*.*'
 };
 
-gulp.task('clean-dist-folders', function () {
-    return del(bases.dest + '*.*');
-});
-
-gulp.task('clean-css-folders', function () {
-    return del(bases.dest + 'css');
-});
-
-gulp.task('clean-img-folders', function () {
-    return del(bases.dest + 'img');
-});
-
-gulp.task('clean-js-folders', function () {
-    return del(bases.dest + 'js');
-});
-
-gulp.task('html', function () {
+gulp.task('html-deploy', function () {
     return gulp.src(paths.html)
         .pipe(gulp.dest(bases.dest))
         .pipe(browserSync.reload({
@@ -58,7 +43,7 @@ gulp.task('html', function () {
         }));
 });
 
-gulp.task('js-libs', ['clean-js-folders'], function () {
+gulp.task('js-libs-deploy', ['clean-js-folders'], function () {
     return gulp.src(bases.src + 'js/libs/**/*.*')
         .pipe(gulp.dest(bases.dest + 'js/libs'))
         .pipe(browserSync.reload({
@@ -66,7 +51,7 @@ gulp.task('js-libs', ['clean-js-folders'], function () {
         }));
 });
 
-gulp.task('css-libs', function () {
+gulp.task('css-libs-deploy', function () {
     return gulp.src(bases.src + 'css/libs/**/*.*')
         .pipe(gulp.dest(bases.dest + 'css/libs'))
         .pipe(browserSync.reload({
@@ -74,9 +59,13 @@ gulp.task('css-libs', function () {
         }));
 });
 
-gulp.task('images', function () {
+gulp.task('images-deploy', function () {
     return gulp.src(paths.images)
-        .pipe(imagemin())
+        .pipe(imagemin({
+            optimizationLevel: 5,
+            progressive: true,
+            interlaced: true
+        }))
         .pipe(gulp.dest(bases.dest + 'img'))
         .pipe(browserSync.reload({
             stream: true
@@ -115,7 +104,7 @@ gulp.task('sass', function () {
             outputStyle: 'expanded'
         }).on('error', sass.logError))
         .pipe(autoprefixer({
-            browsers: ['last 2 version', 'safari 5', 'ie 7', 'ie 8', 'ie 9', 'ios 6', 'android 4'],
+            browsers: ['last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1', 'ios 6', 'android 4'],
             cascade: false
         }))
         .pipe(sourcemaps.write())
@@ -166,7 +155,7 @@ gulp.task('minify-css', function () {
     browserSync.reload();
 });
 
-gulp.task('minify-js', ['js-libs'], function () {
+gulp.task('minify-js', ['js-libs-deploy'], function () {
     return gulp.src([paths.js, '!src/js/libs/**/*.*'])
         .pipe(plumber(plumberOption))
         .pipe(concat('project-name.min.js'))
@@ -175,6 +164,22 @@ gulp.task('minify-js', ['js-libs'], function () {
         .pipe(browserSync.reload({
             stream: true
         }));
+});
+
+gulp.task('clean-dist-folders', function () {
+    return del(bases.dest + '*.*');
+});
+
+gulp.task('clean-css-folders', function () {
+    return del(bases.dest + 'css');
+});
+
+gulp.task('clean-img-folders', function () {
+    return del(bases.dest + 'img');
+});
+
+gulp.task('clean-js-folders', function () {
+    return del(bases.dest + 'js');
 });
 
 // Plumber
@@ -187,15 +192,15 @@ var plumberOption = {
 };
 
 gulp.task('generate-sass-less', function () {
-    runSequence('clean-css-folders', 'css-libs', 'sass', 'less', 'minify-libs-css', 'minify-css');
+    runSequence('clean-css-folders', 'css-libs-deploy', 'sass', 'less', 'minify-libs-css', 'minify-css');
 });
 
 gulp.task('generate-sprites', function () {
-    runSequence('clean-css-folders', 'clean-img-folders', 'images', 'css-libs', 'sprites', 'sass', 'less', 'sprites-css-concat', 'minify-libs-css', 'minify-css');
+    runSequence('clean-css-folders', 'clean-img-folders', 'images-deploy', 'css-libs-deploy', 'sprites', 'sass', 'less', 'sprites-css-concat', 'minify-libs-css', 'minify-css');
 });
 
 gulp.task('watch', function () {
-    gulp.watch(paths.html, ['html']);
+    gulp.watch(paths.html, ['html-deploy']);
     gulp.watch(paths.js, ['minify-js']);
     gulp.watch(paths.css, ['generate-sass-less']);
     gulp.watch(paths.images, ['generate-sprites']);
@@ -205,7 +210,7 @@ gulp.task('initialize-resources', function () {
     gulp.start('clean-dist-folders');
     gulp.start('generate-sprites');
     gulp.start('minify-js');
-    gulp.start('html');
+    gulp.start('html-deploy');
     gulp.start('server');
 });
 
@@ -214,7 +219,11 @@ gulp.task('server', ['watch'], function () {
         server: {
             baseDir: bases.dest
         },
-        port: 3030
+        options: {
+            reloadDelay: 250
+        },
+        port: 3030,
+        notify: false
     });
 });
 
