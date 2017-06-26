@@ -10,7 +10,7 @@
 ```javascript
 gulp.task('initialize-resources', function () {
     gulp.start('clean-dist-folders');
-    gulp.start('generate-images-sprites');
+    gulp.start('generate-sprites');
     gulp.start('minify-js');
     gulp.start('html');
     gulp.start('server');
@@ -24,7 +24,7 @@ gulp.task('initialize-resources', function () {
 이미지 스프라이트를 제작해 주는 task 를 실행.  
 
 ```javascript
-gulp.task('generate-images-sprites', function () {
+gulp.task('generate-sprites', function () {
     runSequence('clean-css-folders', 'clean-img-folders', 'images', 'css-libs', 'sprites', 'sass', 'less', 'sprites-css-concat', 'minify-libs-css', 'minify-css');
 });
 ```
@@ -38,4 +38,32 @@ html 파일을 배포(dist) 폴더에 복사함.
 5. server  
 server 를 띄움.  
 
-## task2
+## task2 - watch
+```javascript
+gulp.task('watch', function () {
+    gulp.watch(paths.html, ['html']);
+    gulp.watch(paths.js, ['minify-js']);
+    gulp.watch(paths.css, ['generate-sass-less']);
+    gulp.watch(paths.images, ['generate-sprites']);
+});
+```
+1. html 수정이 일어났을 때 **html** task 를 실행.
+2. js 수정이 일어났을 때 **js** task 를 실행.
+3. css (sass/less/library css) 수정이 일어났을 때 **generate-sass-less task** 를 실행.
+4. image 수정이 일어났을 때 **generate-sprites** task 를 실행.
+
+## task3 - server
+```javascript
+gulp.task('server', ['watch'], function () {
+    browserSync.init({
+        server: {
+            baseDir: bases.dest
+        },
+        port: 3030
+    });
+});
+```
+1. browserSync 를 활용해 서버를 띄움.  
+2. 바라보는 폴더는 배포(dist) 폴더.  
+3. 기본 port 는 3030  
+Documentation (https://browsersync.io/docs/gulp)  
