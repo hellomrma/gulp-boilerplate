@@ -128,3 +128,8 @@ gulp.task('minify-js', ['js-libs'], function () {
         }));
 });
 ```
+1. **minify-js** task 를 실행하기 앞서 **clean-js-folders** **js-libs** task 를 실행함.
+2. **clean-js-folders** task 는 배포(dist) 폴더 내 js 폴더 삭제.
+3. **js-libs** task 는 library 폴더 / 파일을 그대로 복사함.
+4. **minify-js** task 에서 libs 폴더를 제외한 js 파일을 합치고(concat) 압축(uglify)후 배포(dist) 폴더로 옮김.
+5. 브라우저 reload. (**stream: true** 는 변경된 파일만 브라우저에 전송되어 새로고침(Refresh) 없이도 반영이 되는 옵션.
