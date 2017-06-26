@@ -197,27 +197,22 @@ var plumberOption = {
     errorHandler: errorHandler
 };
 
-gulp.task('generate-sass-less', function () {
-    runSequence('clean-css-folders', 'css-libs-deploy', 'sprites', 'sass', 'less', 'sprites-css-concat', 'minify-libs-css', 'minify-css');
-});
-
-gulp.task('generate-sprites', function () {
-    runSequence('clean-css-folders', 'clean-img-folders', 'images-deploy', 'css-libs-deploy', 'sprites', 'sprites-css-concat', 'sass', 'less', 'minify-libs-css', 'minify-css');
+gulp.task('generate-sass-less-sprites', function () {
+    runSequence('clean-css-folders', 'clean-img-folders', 'css-libs-deploy', 'images-deploy', 'sprites', 'sprites-css-concat', 'sass', 'less', 'minify-libs-css', 'minify-css');
 });
 
 gulp.task('watch', function () {
     gulp.watch(paths.html, ['html-deploy']);
     gulp.watch(paths.js, ['minify-js']);
-    gulp.watch(paths.css, ['generate-sass-less']);
-    gulp.watch(paths.images, ['generate-sprites']);
+    gulp.watch(paths.css, ['generate-sass-less-sprites']);
+    gulp.watch(paths.images, ['generate-sass-less-sprites']);
 });
 
 gulp.task('initialize-resources', function () {
     gulp.start('clean-dist-folders');
-    gulp.start('generate-sprites');
+    gulp.start('generate-sass-less-sprites');
     gulp.start('minify-js');
     gulp.start('html-deploy');
-    gulp.start('server');
 });
 
 gulp.task('server', ['watch'], function () {
@@ -233,4 +228,4 @@ gulp.task('server', ['watch'], function () {
     });
 });
 
-gulp.task('default', ['initialize-resources']);
+gulp.task('default', ['initialize-resources', 'server']);
