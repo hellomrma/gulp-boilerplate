@@ -146,7 +146,7 @@ var plumberOption = {
 };
 ```
 
-##task6 - generate-sass-less
+## task6 - generate-sass-less
 ```javascript
 gulp.task('generate-sass-less', function () {
     runSequence('clean-css-folders', 'css-libs', 'sprites', 'sass', 'less', 'sprites-css-concat', 'minify-libs-css', 'minify-css');
@@ -154,4 +154,4 @@ gulp.task('generate-sass-less', function () {
 ```
 **generate-sass-less** task 는 runSequence 를 활용해서 multi-tasking 을 구현 함.
 
-1. 
+1. SASS / LESS 파일을 

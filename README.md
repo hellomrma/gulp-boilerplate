@@ -38,3 +38,6 @@ $ gulp
     * js
         * libs
     * views
+
+## Guide gulpfile.js
+https://github.com/hellomrma/gulp-boilerplate/tree/master/%40guideGulpfile
