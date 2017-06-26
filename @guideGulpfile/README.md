@@ -30,6 +30,7 @@ gulp.task('generate-images-sprites', function () {
 ```
 > 위 task 는 이미지가 업데이트 됨으로써 실행되는 일련의 작업들을 한데 모아둠.  
 > 스프라이트 task 는 CSS 의 변경까지 영향이 가기 때문에 CSS 와 관련된 task 까지 함께 실행함.  
+
 > 3. minify-js  
 > Javascript 파일을 압축(minify) 함.  
 > 4. html  
