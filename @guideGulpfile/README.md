@@ -32,10 +32,9 @@ SASS / LESS / JS / IMAGE 등의 원본 형태의 파일들이 모여 있는 폴�
 ```javascript
 gulp.task('initialize-resources', function () {
     gulp.start('clean-dist-folders');
-    gulp.start('generate-sprites');
+    gulp.start('generate-sass-less-sprites');
     gulp.start('minify-js');
     gulp.start('html-deploy');
-    gulp.start('server');
 });
 ```
 
@@ -65,14 +64,14 @@ server 를 띄움.
 gulp.task('watch', function () {
     gulp.watch(paths.html, ['html-deploy']);
     gulp.watch(paths.js, ['minify-js']);
-    gulp.watch(paths.css, ['generate-sass-less']);
-    gulp.watch(paths.images, ['generate-sprites']);
+    gulp.watch(paths.css, ['generate-sass-less-sprites']);
+    gulp.watch(paths.images, ['generate-sass-less-sprites']);
 });
 ```
 1. html 수정이 일어났을 때 **html-deploy** task 를 실행.
 2. js 수정이 일어났을 때 **minify-js** task 를 실행.
-3. css (SASS / LESS / ETC CSS) 수정이 일어났을 때 **generate-sass-less** task 를 실행.
-4. image 수정이 일어났을 때 **generate-sprites** task 를 실행.
+3. css (SASS / LESS / ETC CSS) 수정이 일어났을 때 **generate-sass-less-sprites** task 를 실행.
+4. image 수정이 일어났을 때 **generate-sass-less-sprites** task 를 실행.
 
 ## TASK3 - server
 ```javascript
@@ -150,32 +149,38 @@ var plumberOption = {
 };
 ```
 
-## TASK6 - generate-sass-less
+## TASK6 - generate-sass-less-sprites
 ```javascript
-gulp.task('generate-sass-less', function () {
-    runSequence('clean-css-folders', 'css-libs-deploy', 'sprites', 'sprites-css-concat', 'sass', 'less', 'minify-libs-css', 'minify-css');
+gulp.task('generate-sass-less-sprites', function () {
+    runSequence('clean-css-folders', 'clean-img-folders', 'css-libs-deploy', 'images-deploy', 'sprites', 'sprites-css-concat', 'sass', 'less', 'minify-libs-css', 'minify-css');
 });
 ```
-**generate-sass-less** task 는 runSequence 를 활용해서 multi-tasking 을 구현 함.
+**generate-sass-less** task 는 runSequence 를 활용해서 multi-tasking-sprites 을 구현 함.
 
 1. SASS / LESS 파일을 수정하면 컴파일 하기전에 **clean-css-folders** task 를 먼저 실행 함.
 (다양하게 테스트를 해 본 결과, 배포(dist) 폴더에 파일들이 남아 있으면 코드가 꼬이는 경우가 발생했었음. 이를 방지하기 위함.)
-2. **css-libs-deploy** task 는 library 관련 CSS 를 옮김.
-3. css 폴더를 삭제 했음으로 **sprites**, **sprites-css-concat** task 를 실행하여 스프라이트 CSS 를 생성함.
-4. SASS / LESS 파일을 컴파일 한 후
-5. **minify-libs-css** task 를 통하여 libs 폴더의 CSS 를 모두 병합.
-6. 마지막으로 이 파일들을 **minify-css** task 를 통하여 minify 함.
+2. **clean-img-folders** task 실행. 배포(dist) 폴더 내 img 폴더 삭제.
+3. **css-libs-deploy** task 실행. library 관련 CSS 를 옮김.
+4. **images-deploy** task 실행. 이미지를 옮김.
+5. css 폴더를 삭제 했음으로 **sprites**, **sprites-css-concat** task 를 실행하여 스프라이트 IMAGES / CSS 를 생성함.
+6. SASS / LESS 파일을 컴파일.
+7. **minify-libs-css** task 를 통하여 libs 폴더의 CSS 를 모두 병합.
+8. 마지막으로 이 파일들을 **minify-css** task 를 통하여 minify 함.
 
 ### 세부 TASK 설명
-#### clean-css-folders
+#### clean-css-folders / clean-img-folders
 ```javascript
 gulp.task('clean-css-folders', function () {
     return del(bases.dest + 'css');
 });
-```
-배포(dist) 폴더 내 CSS 폴더를 삭제 함.
 
-#### css-libs-deploy
+gulp.task('clean-img-folders', function () {
+    return del(bases.dest + 'img');
+});
+```
+배포(dist) 폴더 내 CSS / IMG 폴더를 삭제 함.  
+
+#### css-libs-deploy / images-deploy
 ```javascript
 gulp.task('css-libs-deploy', function () {
     return gulp.src(bases.src + 'css/libs/**/*.*')
@@ -185,7 +190,53 @@ gulp.task('css-libs-deploy', function () {
         }));
 });
 ```
-libs 폴더의 파일들을 배포(dist) 폴더내 css/libs 폴더로 복사 함.
+libs 폴더의 파일들을 배포(dist) 폴더내 css/libs 폴더로 복사 함.  
+
+```javascript
+gulp.task('images-deploy', function () {
+    return gulp.src(paths.images)
+        .pipe(imagemin({
+            optimizationLevel: 5,
+            progressive: true,
+            interlaced: true
+        }))
+        .pipe(gulp.dest(bases.dest + 'img'))
+        .pipe(browserSync.reload({
+            stream: true
+        }));
+});
+```
+img 폴더의 파일들을 배포(dist) 폴더내 img 폴더로 복사 함.  
+복사하기 전에 imagemin 을 실행하는데 이는 이미지 최적화 작업 임. 
+
+#### sprites
+ ```javascript
+ gulp.task('sprites', function () {
+    var opts = {
+        spritesmith: function (options, sprite, icons) {
+            options.imgPath = `../img/sprites/${options.imgName}`;
+            options.cssName = `${sprite}-sprites.css`;
+            options.cssTemplate = null;
+            options.cssSpritesheetName = sprite;
+            options.padding = 4;
+            options.cssVarMap = function (sp) {
+                sp.name = `${sprite}-${sp.name}`;
+            };
+            return options;
+        }
+    };
+    var spriteData = gulp.src('./src/img/sprites/**/*.png').pipe(spritesmith(opts)).on('error', function (err) {
+        console.log(err);
+    });
+
+    var imgStream = spriteData.img.pipe(gulp.dest('./dist/img/sprites'));
+    var cssStream = spriteData.css.pipe(gulp.dest('./dist/css/sprites'));
+
+    return merge(imgStream, cssStream);
+});
+ ```
+
+#### sprites-css-concat
 
 #### sass / less
 ```javascript
@@ -224,10 +275,3 @@ sourcemaps 는 브라우저 개발자도구(F12)에서 특정 element 를 클릭
 3. SASS / LESS 컴파일 실행. (vendor prefix 적용)  
 4. sourcemaps 입력 실행.  
 5. 배포(dist) 폴더로 복사  
-
-## TASK7 - generate-sprites
-```javascript
-gulp.task('generate-sprites', function () {
-    runSequence('clean-css-folders', 'clean-img-folders', 'images-deploy', 'css-libs-deploy', 'sprites', 'sprites-css-concat', 'sass', 'less', 'minify-libs-css', 'minify-css');
-});
-```
