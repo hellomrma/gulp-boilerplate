@@ -2,7 +2,7 @@
 Simple Boilerplate for HTML/CSS/JS development based on Gulp.
 
 ## Installation
-```bash
+```sh
 $ npm install
 $ gulp
 ```
