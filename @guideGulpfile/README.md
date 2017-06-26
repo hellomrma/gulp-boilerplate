@@ -237,6 +237,14 @@ img 폴더의 파일들을 배포(dist) 폴더내 img 폴더로 복사 함.
  ```
 
 #### sprites-css-concat
+```javascript
+gulp.task('sprites-css-concat', function () {
+    return gulp.src(bases.dest + 'css/sprites/**/*.css')
+        .pipe(plumber(plumberOption))
+        .pipe(concatCss("sprites.css"))
+        .pipe(gulp.dest(bases.dest + 'css/sprites'));
+});
+```
 
 #### sass / less
 ```javascript
@@ -275,3 +283,37 @@ sourcemaps 는 브라우저 개발자도구(F12)에서 특정 element 를 클릭
 3. SASS / LESS 컴파일 실행. (vendor prefix 적용)  
 4. sourcemaps 입력 실행.  
 5. 배포(dist) 폴더로 복사  
+
+#### minify-libs-css
+```javascript
+gulp.task('css-libs-concat', function () {
+    return gulp.src([bases.dest + 'css/libs/**/*.css', '!dist/css/libs/**/*.min.css'])
+        .pipe(plumber(plumberOption))
+        .pipe(concatCss("libs.css"))
+        .pipe(gulp.dest(bases.dest + 'css/libs'));
+});
+
+gulp.task('minify-libs-css', ['css-libs-concat'], function () {
+    gulp.src([bases.dest + 'css/libs/*.css', '!dist/css/libs/*.min.css'])
+        .pipe(plumber(plumberOption))
+        .pipe(cssmin())
+        .pipe(rename({
+            suffix: '.min'
+        }))
+        .pipe(gulp.dest(bases.dest + 'css'));
+});
+```
+
+#### minify-css
+```javascript
+gulp.task('minify-css', function () {
+    gulp.src([bases.dest + 'css/scss/*.css', bases.dest + 'css/less/*.css', bases.dest + 'css/sprites/sprites.css', '!dist/css/*.min.css'])
+        .pipe(plumber(plumberOption))
+        .pipe(cssmin())
+        .pipe(rename({
+            suffix: '.min'
+        }))
+        .pipe(gulp.dest(bases.dest + 'css'));
+    browserSync.reload();
+});
+```
