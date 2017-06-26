@@ -3,7 +3,7 @@ Simple Boilerplate for HTML/CSS/JS development based on Gulp.
 
 ## Installation
 1. Install Node.js (https://nodejs.org)
-2. Download or clone this repository.
+2. Fork this repository.
 3. Move to folders and Install the dependencies.
 ```sh
 $ npm install
