@@ -6,7 +6,6 @@ var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var cssmin = require('gulp-cssmin');
 var rename = require('gulp-rename');
-var cleanCSS = require('gulp-clean-css');
 var autoprefixer = require('gulp-autoprefixer');
 var spritesmith = require('gulp.spritesmith-multi');
 var merge = require('merge-stream');
