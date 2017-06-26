@@ -41,3 +41,8 @@ $ gulp
 
 ## Guide gulpfile.js
 https://github.com/hellomrma/gulp-boilerplate/tree/master/%40guideGulpfile
+
+## History
+26 JUN 2017
+* Guide gulpfile.js 문서 작성
+* gulpfile.js 업데이트 (코드 정리)
