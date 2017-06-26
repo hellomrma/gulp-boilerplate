@@ -40,24 +40,21 @@ gulp.task('initialize-resources', function () {
 
 1. clean-dist-folders
 배포 폴더를 삭제  
-(기존 작업을 하면서 남아 있는 불필요한 파일 및 폴더를 깨끗이 정리함으로써 리소스가 덮어지면서   생기는 오류를 예방 하기 위함)
-2. generate-image-sprites  
+(기존 작업을 하면서 남아 있는 불필요한 파일 및 폴더를 깨끗이 정리함으로써 리소스가 덮어지면서   생기는 오류를 예방 하기 위함)  
+2. generate-sass-less-sprites  
 이미지 스프라이트를 제작해 주는 task 를 실행.  
 
 ```javascript
-gulp.task('generate-sprites', function () {
-    runSequence('clean-css-folders', 'clean-img-folders', 'images-deploy', 'css-libs-deploy', 'sprites', 'sass', 'less', 'sprites-css-concat', 'minify-libs-css', 'minify-css');
+gulp.task('generate-sass-less-sprites', function () {
+    runSequence('clean-css-folders', 'clean-img-folders', 'css-libs-deploy', 'images-deploy', 'sprites', 'sprites-css-concat', 'sass', 'less', 'minify-libs-css', 'minify-css');
 });
 ```
-위 task 는 이미지가 업데이트 됨으로써 실행되는 일련의 작업들을 한데 모아둠.  
-스프라이트 task 는 CSS 의 변경까지 영향이 가기 때문에 CSS 와 관련된 task 까지 함께 실행함.  
+위 task 는 이미지가 업데이트 됨으로써 실행되는 일련의 작업들을 한데 모아둠.
 
 3. minify-js  
 Javascript 파일을 압축(minify) 함.  
-4. html  
-html 파일을 배포(dist) 폴더에 복사함.  
-5. server  
-server 를 띄움.  
+4. html-deploy  
+html 파일을 배포(dist) 폴더에 전달 함.  
 
 ## TASK2 - watch
 ```javascript
@@ -88,9 +85,10 @@ gulp.task('server', ['watch'], function () {
     });
 });
 ```
-1. browserSync 를 활용해 서버를 띄움.  
-2. 바라보는 폴더는 배포(dist) 폴더.  
-3. 기본 port 는 3030  
+1. **server** task 를 실행하기 앞서 **watch** task 를 실행.  
+2. browserSync 를 활용해 서버를 띄움.  
+3. 바라보는 폴더는 배포(dist) 폴더.  
+4. 기본 port 는 3030  
 
 Gulp browserSync Documentation (https://browsersync.io/docs/gulp)  
 
@@ -104,7 +102,7 @@ gulp.task('html-deploy', function () {
         }));
 });
 ```
-html 파일의 변화가 일어났을때 배포(dist) 폴더로 배포 후 페이지를 reload 함.
+html 파일의 변화가 일어났을때 배포(dist) 폴더로 전달 후 수정된 파일을 reload 함.
 
 ## TASK5 - minify-js
 ```javascript
@@ -133,7 +131,7 @@ gulp.task('minify-js', ['js-libs-deploy'], function () {
 ```
 1. **minify-js** task 를 실행하기 앞서 **clean-js-folders**, **js-libs-deploy** task 를 실행함.
 2. **clean-js-folders** task 는 배포(dist) 폴더 내 js 폴더 삭제.
-3. **js-libs-deploy** task 는 library 폴더 / 파일을 그대로 복사함.
+3. **js-libs-deploy** task 는 library 폴더 / 파일을 그대로 전달 함.
 4. **minify-js** task 에서 libs 폴더를 제외한 js 파일을 합치고(concat) 압축(uglify)후 배포(dist) 폴더로 전달.
 5. 브라우저 reload. (**stream: true** 는 변경된 파일만 브라우저에 전송되어 새로고침(Refresh) 없이도 반영이 되는 옵션.)
 
