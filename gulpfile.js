@@ -18,7 +18,7 @@ var concatCss = require('gulp-concat-css');
 var browserSync = require('browser-sync').create();
 var plumber = require('gulp-plumber');
 
-// Path Setting
+// setting path
 var bases = {
     src: 'src/',
     dest: 'dist/'
@@ -44,6 +44,10 @@ gulp.task('clean-css-folders', function () {
 
 gulp.task('clean-img-folders', function () {
     return del(bases.dest + 'img');
+});
+
+gulp.task('clean-js-folders', function () {
+    return del(bases.dest + 'js');
 });
 
 gulp.task('html', function () {
@@ -160,10 +164,6 @@ gulp.task('minify-css', function () {
         }))
         .pipe(gulp.dest(bases.dest + 'css'));
         browserSync.reload();
-});
-
-gulp.task('clean-js-folders', function () {
-    return del(bases.dest + 'js');
 });
 
 gulp.task('minify-js', ['js-libs'], function () {
