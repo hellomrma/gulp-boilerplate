@@ -228,7 +228,6 @@ gulp.task('initialize-resources', function () {
     gulp.start('minify-js');
     gulp.start('root-files-deploy');
     gulp.start('html-deploy');
-
 });
 
 gulp.task('server', ['watch'], function () {

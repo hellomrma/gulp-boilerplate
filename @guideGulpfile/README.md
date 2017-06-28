@@ -34,6 +34,7 @@ gulp.task('initialize-resources', function () {
     gulp.start('clean-dist-folders');
     gulp.start('generate-sass-less-sprites');
     gulp.start('minify-js');
+    gulp.start('root-files-deploy');
     gulp.start('html-deploy');
 });
 ```
@@ -53,22 +54,26 @@ gulp.task('generate-sass-less-sprites', function () {
 
 3. minify-js  
 Javascript 파일을 압축(minify) 함.  
-4. html-deploy  
+4. root-files-deploy  
+root 폴더에 있는 html 제외한 파일을 전달 함.
+5. html-deploy  
 html 파일을 배포(dist) 폴더에 전달 함.  
 
 ## TASK2 - watch
 ```javascript
 gulp.task('watch', function () {
+    gulp.watch(paths.root, ['root-files-deploy']);
     gulp.watch(paths.html, ['html-deploy']);
     gulp.watch(paths.js, ['minify-js']);
     gulp.watch(paths.css, ['generate-sass-less-sprites']);
     gulp.watch(paths.images, ['generate-sass-less-sprites']);
 });
 ```
-1. html 수정이 일어났을 때 **html-deploy** task 를 실행.
-2. js 수정이 일어났을 때 **minify-js** task 를 실행.
-3. css (SASS / LESS / ETC CSS) 수정이 일어났을 때 **generate-sass-less-sprites** task 를 실행.
-4. image 수정이 일어났을 때 **generate-sass-less-sprites** task 를 실행.
+1. root 폴더의 html 을 제외한 파일의 수정이 일어났을 때 **root-files-deploy** task 를 실행.
+2. html 수정이 일어났을 때 **html-deploy** task 를 실행.
+3. js 수정이 일어났을 때 **minify-js** task 를 실행.
+4. css (SASS / LESS / ETC CSS) 수정이 일어났을 때 **generate-sass-less-sprites** task 를 실행.
+5. image 수정이 일어났을 때 **generate-sass-less-sprites** task 를 실행.
 
 ## TASK3 - server
 ```javascript
@@ -92,7 +97,24 @@ gulp.task('server', ['watch'], function () {
 
 Gulp browserSync Documentation (https://browsersync.io/docs/gulp)  
 
-## TASK4 - html
+## TASK4 - root-files-deploy
+```javascript
+gulp.task('clean-root-resources', function () {
+    return del([bases.dest + '*.*', '!dist/*.html']);
+});
+
+gulp.task('root-files-deploy', ['clean-root-resources'], function () {
+    return gulp.src([paths.root, '!src/*.html'])
+        .pipe(gulp.dest(bases.dest))
+        .pipe(browserSync.reload({
+            stream: true
+        }));
+});
+```
+배포(dist) 폴더에서 html 을 제외한 파일들을 삭제한 후  
+src root 폴더에 html 을 제외한 파일들(ex) favicon.ico)을 배포(dist) 폴더로 전달.  
+
+## TASK5 - html-deploy
 ```javascript
 gulp.task('html-deploy', function () {
     return gulp.src(paths.html)
@@ -104,7 +126,7 @@ gulp.task('html-deploy', function () {
 ```
 html 파일의 변화가 일어났을때 배포(dist) 폴더로 전달 후 수정된 파일을 reload 함.
 
-## TASK5 - minify-js
+## TASK6 - minify-js
 ```javascript
 gulp.task('clean-js-folders', function () {
     return del(bases.dest + 'js');
@@ -147,7 +169,7 @@ var plumberOption = {
 };
 ```
 
-## TASK6 - generate-sass-less-sprites
+## TASK7 - generate-sass-less-sprites
 ```javascript
 gulp.task('generate-sass-less-sprites', function () {
     runSequence('clean-css-folders', 'clean-img-folders', 'css-libs-deploy', 'images-deploy', 'sprites', 'sprites-css-concat', 'sass', 'less', 'minify-libs-css', 'minify-css');
