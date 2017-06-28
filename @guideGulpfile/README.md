@@ -12,6 +12,7 @@ var bases = {
     dest: 'dist/'
 };
 var paths = {
+    root: bases.src + '*.*',
     js: bases.src + 'js/**/*.js',
     css: bases.src + 'css/**/*.*',
     cssLibs: bases.src + 'css/libs/**/*.css',
