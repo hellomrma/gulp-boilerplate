@@ -15,31 +15,30 @@ $ gulp
 
 ## Features
 1. Sass (compiles to CSS)
-2. Less (compiles to CSS)
-3. CSS Minify
-4. JS Minify (not include library folder)
-5. Image Sprite Generate
-6. Image Optimization
-7. HTML, CSS, JS Browsersync
+2. CSS Minify
+3. JS Minify (not include library folder)
+4. Image Sprite Generate
+5. Image Optimization
+6. SVG Icon
+6. HTML, CSS, JS Browsersync
 
 ## Structure
 * dist (desination folders. it auto building when you'are first run gulp)
 * src (developer working folders)
     * css
+        * libs
         * scss
             * common
             * mixins
             * pages
-        * less
-            * common
-            * mixins
-            * pages
-        * libs
+    * font
     * img
+        * icons
         * sprites
-            * folder-01
-            * folder-02
-            * folder-03
+            * bul
+            * ico
+            * txt
+        * svg
     * js
         * apps
         * libs
@@ -49,6 +48,9 @@ $ gulp
 https://github.com/hellomrma/gulp-boilerplate/tree/master/%40guideGulpfile
 
 ## History
+15 MAY 2018
+* SVG Icon 외 다수 업데이트
+
 26 JUN 2017
 * Guide gulpfile.js 문서 작성
 * gulpfile.js 업데이트 (코드 정리)
