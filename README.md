@@ -20,7 +20,8 @@ $ gulp
 4. Image Sprite Generate
 5. Image Optimization
 6. SVG Icon
-6. HTML, CSS, JS Browsersync
+7. HTML, CSS, JS Browsersync
+8. HTML Include
 
 ## Structure
 * dist (desination folders. it auto building when you'are first run gulp)
