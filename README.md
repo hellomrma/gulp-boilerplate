@@ -44,9 +44,6 @@ $ gulp
         * libs
     * views
 
-## Guide gulpfile.js
-https://github.com/hellomrma/gulp-boilerplate/tree/master/%40guideGulpfile
-
 ## History
 15 MAY 2018
 * SVG Icon 외 다수 업데이트
