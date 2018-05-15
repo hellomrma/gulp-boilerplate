@@ -1,5 +1,10 @@
 /* SASS */
-@import "mixins/mixins.scss";
 @import "common/reset.scss";
 @import "common/common.scss";
+@import "common/font.scss";
+@import "common/variable.scss";
+@import "mixins/mixins.scss";
+@import "mixins/sass-inline-svg-data.scss";
+@import "mixins/sass-inline-svg.scss";
+@import "common/svgicons.scss";
 @import "pages/main.scss";

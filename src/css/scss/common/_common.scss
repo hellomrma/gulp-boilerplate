@@ -1,0 +1,60 @@
+// body, input, select, textarea, button {
+//     font-family: 'Apple SD Gothic Neo', '돋움', Dotum, sans-serif;
+// }
+
+// body, input, select, textarea, button {
+//     font-family: NanumBarunGothic, '나눔바른고딕', 'Nanum BarunGothic', 'Malgun Gothic', '맑은고딕', 'Apple SD Gothic Neo', Dotum, '돋움', sans-serif
+// }
+
+// body, input, select, textarea, button {
+//     font-family: NanumGothic, '나눔고딕', 'Nanum Gothic', 'Malgun Gothic', '맑은고딕', 'Apple SD Gothic Neo', Dotum, '돋움', sans-serif
+// }
+
+// body, input, select, textarea, button {
+//     font-family: 'Roboto', 'Roboto Thin', Helvetica, tahoma, sans-serif
+// }
+
+// body, input, select, textarea, button {
+//     font-family: 'Malgun Gothic', '맑은고딕', 'Apple SD Gothic Neo', Dotum, '돋움', sans-serif
+// }
+
+.blind,
+caption span,
+legend {
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1px;
+    height: 1px;
+    font-size: 1px;
+    line-height: 100px;
+    white-space: nowrap
+}
+
+.skip {
+    height: 0
+}
+
+.skip a {
+    display: block;
+    position: absolute;
+    left: 0;
+    top: -100px;
+    width: 100%;
+    height: 25px;
+    text-align: center
+}
+
+.skip a:focus,
+#skip a:active {
+    position: absolute;
+    top: 0;
+    z-index: 100;
+    padding: 10px 0;
+    background: #000;
+    font-weight: bold;
+    color: #fff;
+    font-size: 20px;
+    text-decoration: none
+}

@@ -1,5 +1,22 @@
 /* MAIN */
 
-body {
-    background-color: #333
+.text {
+    background-color: lightcoral;
+    color: #fff;
+    @include vw-font-size-pc(50);
+    @include line-height-pc(1)
+}
+
+@include breakpoint(tablet) {
+    .text {
+        background-color: lightgreen;
+        @include vw-font-size-tb(50);
+    }
+}
+
+@include breakpoint(mobile) {
+    .text {
+        background-color: lightsalmon;
+        @include vw-font-size-mo(25);
+    }
 }

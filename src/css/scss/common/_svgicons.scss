@@ -1,0 +1,24 @@
+/* SVG Icons */
+.icon-sample-01 {
+    display:inline-block;
+    width:30px;
+    height:30px;
+    @include inline-svg-icon("icon_twitter", #cecece, center, 30px 30px)
+    &:hover{
+        @include inline-svg-icon("icon_twitter", orange, center, 30px 30px)
+    }
+}
+
+.icon-sample-02 {
+    display:inline-block;
+    width:30px;
+    height:30px;
+    @include inline-svg-icon("icon_window", red, center, 30px 30px)
+}
+
+.icon-sample-03 {
+    display:inline-block;
+    width:30px;
+    height:30px;
+    @include inline-svg-icon("icon_youtube", orange, center, 30px 30px)
+}
